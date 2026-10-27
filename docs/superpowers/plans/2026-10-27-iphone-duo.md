@@ -25,15 +25,21 @@
 ## Task 1: 库存解析与提醒状态机
 **Files:** monitor.py, test_monitor.py, config.json
 **Interfaces:** parse_stores(payload, part) -> dict; advance(state, observations, errors, notify, now) -> dict.
-- [ ] 编写补货、持续有货、再次补货、门店非目标、未知结构、部分失败、推送失败重试测试，运行并观察失败。
-- [ ] 实现严格解析与状态推进，测试全部通过。
-- [ ] 用真实杭州、上海响应验证配置覆盖十店。
+- [x] 编写补货、持续有货、再次补货、门店非目标、未知结构、部分失败、推送失败重试测试，运行并观察失败。
+- [x] 实现严格解析与状态推进，测试全部通过。
+- [x] 用真实杭州、上海响应验证配置覆盖十店。
 
 ## Task 2: 云端运行与配置
 **Files:** monitor.py, .github/workflows/monitor.yml, README.md, .gitignore
 **Interfaces:** CLI --check/--test-push；GitHubState.load/save；Bark.send。
-- [ ] 添加 HTTP 错误、Bark 状态、GitHub 状态不可读与保存的离线测试。
-- [ ] 实现 HTTP 集成、独立分支状态、摘要和无密钥失败行为。
-- [ ] 加入五分钟调度、手动查询与测试推送入口、MONITOR_ENABLED 变量开关。
-- [ ] 运行完整测试与真实查询，自查仓库密钥与工作流权限。
+- [x] 添加 Bark 状态、GitHub 状态不可读的离线测试。
+- [x] 实现 HTTP 集成、独立分支状态、摘要和无密钥失败行为。
+- [x] 加入五分钟调度、手动查询与测试推送入口、MONITOR_ENABLED 变量开关。
+- [x] 运行完整测试与真实查询，自查仓库密钥与工作流权限。
 - [ ] 创建独立仓库并上传，执行云端 check；推送配置不足时明确未开启。
+
+## 验证记录
+- 本机真实查询覆盖十家目标门店，均为 unavailable；数据非缓存样例。
+- 初始十二项离线测试全部通过。
+- 独立代码审查发现邻近门店无效数据会丢弃整组结果；新增两项回归测试，先验证两项失败，修复后十四项全部通过。
+- 公开仓库已获用户选择；GitHub CLI 需要补充 workflow scope，官方设备授权等待用户完成。定时监测尚未开启。
