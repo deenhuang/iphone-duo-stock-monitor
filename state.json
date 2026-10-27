@@ -1,1 +1,70 @@
-{"version": 1, "part": "MK2P4CH/A", "stores": {}, "failures": 0, "last_error_push": 0}
+{
+  "version": 1,
+  "part": "MK2P4CH/A",
+  "stores": {
+    "R471": {
+      "available": false,
+      "city": "杭州",
+      "name": "西湖",
+      "quote": "不可取货"
+    },
+    "R532": {
+      "available": false,
+      "city": "杭州",
+      "name": "杭州万象城",
+      "quote": "不可取货"
+    },
+    "R705": {
+      "available": false,
+      "city": "上海",
+      "name": "七宝",
+      "quote": "不可取货"
+    },
+    "R683": {
+      "available": false,
+      "city": "上海",
+      "name": "环球港",
+      "quote": "不可取货"
+    },
+    "R678": {
+      "available": false,
+      "city": "上海",
+      "name": "静安",
+      "quote": "不可取货"
+    },
+    "R401": {
+      "available": false,
+      "city": "上海",
+      "name": "上海环贸 iapm",
+      "quote": "不可取货"
+    },
+    "R390": {
+      "available": false,
+      "city": "上海",
+      "name": "香港广场",
+      "quote": "不可取货"
+    },
+    "R359": {
+      "available": false,
+      "city": "上海",
+      "name": "南京东路",
+      "quote": "不可取货"
+    },
+    "R389": {
+      "available": false,
+      "city": "上海",
+      "name": "浦东",
+      "quote": "不可取货"
+    },
+    "R581": {
+      "available": false,
+      "city": "上海",
+      "name": "五角场",
+      "quote": "不可取货"
+    }
+  },
+  "failures": 0,
+  "last_error_push": 0,
+  "last_full_success": 1793095689.6008608,
+  "last_run": 1793095689.6008608
+}
