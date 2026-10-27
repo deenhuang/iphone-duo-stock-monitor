@@ -1,0 +1,47 @@
+name: iPhone Duo pickup monitor
+
+on:
+  schedule:
+    - cron: '2-59/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'check=只查库存；test-push=测试手机通知；run=监测并提醒'
+        required: true
+        default: check
+        type: choice
+        options:
+          - check
+          - test-push
+          - run
+
+permissions:
+  contents: write
+
+concurrency:
+  group: iphone-duo-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    if: github.event_name == 'workflow_dispatch' || vars.MONITOR_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Run offline tests
+        run: python3 -m unittest -v
+      - name: Query stock or send notification
+        env:
+          MODE: ${{ github.event.inputs.mode || 'run' }}
+          BARK_KEY: ${{ secrets.BARK_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          case "$MODE" in
+            check) python3 monitor.py --check ;;
+            test-push) python3 monitor.py --test-push ;;
+            run) python3 monitor.py ;;
+            *) echo 'Invalid mode'; exit 1 ;;
+          esac
