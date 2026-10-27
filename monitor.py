@@ -178,8 +178,14 @@ def advance(state, observations, errors, notify, now):
 
 class Bark:
     def __init__(self, key):
+        key = (key or "").strip()
+        if key.startswith("https://"):
+            parsed = urllib.parse.urlsplit(key)
+            if parsed.netloc != "api.day.app":
+                raise MonitorError("请使用 Bark 默认服务器 https://api.day.app 的推送链接")
+            key = urllib.parse.unquote(parsed.path.strip("/").split("/")[0])
         if not key or not re.fullmatch(r"[A-Za-z0-9_-]{5,200}", key):
-            raise MonitorError("请在 GitHub Secrets 配置 BARK_KEY（只填设备密钥，不填整个网址）")
+            raise MonitorError("请在 GitHub Secrets 配置 BARK_KEY，可填设备密钥或 App 中复制的完整 https://api.day.app 推送链接")
         self.key = key
 
     def send(self, title, body):

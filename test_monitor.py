@@ -129,6 +129,21 @@ class StockTests(unittest.TestCase):
                 monitor.Bark("private-key").send("title", "body")
         self.assertNotIn("private-key", str(error.exception))
 
+    def test_bark_accepts_copied_official_link_and_whitespace(self):
+        for value in [" private-key\n", "https://api.day.app/private-key/测试/内容?group=test"]:
+            sent = []
+            def send(url, **kwargs):
+                sent.append((url, kwargs["data"]))
+                return {"code": 200}
+            with self.subTest(value=value), patch.object(monitor, "request_json", side_effect=send):
+                monitor.Bark(value).send("title", "body")
+            self.assertEqual(sent[0][0], "https://api.day.app/push")
+            self.assertEqual(sent[0][1]["device_key"], "private-key")
+
+    def test_bark_never_sends_secrets_to_a_custom_host(self):
+        with self.assertRaises(monitor.MonitorError):
+            monitor.Bark("https://other.example/private-key/body")
+
     def test_bark_http_error_identifies_invalid_device_without_leaking_secret(self):
         response = io.BytesIO(json.dumps({"code": 400, "message": "failed to get device token: private-key"}).encode())
         failure = urllib.error.HTTPError("https://api.day.app/push", 400, "Bad Request", {}, response)

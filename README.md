@@ -5,7 +5,7 @@
 ## 手机配置
 
 1. 在 iPhone 安装 [Bark](https://bark.day.app/)，允许通知。在 Bark 首页的示例推送地址 `https://api.day.app/你的设备密钥/…` 中复制设备密钥。
-2. 打开本仓库 **Settings → Secrets and variables → Actions → New repository secret**，名称填 `BARK_KEY`，值只填设备密钥。不要提交到文件或 Issue，也不必发送到聊天中。
+2. 打开本仓库 **Settings → Secrets and variables → Actions → New repository secret**，名称填 `BARK_KEY`，值可填设备密钥，或直接粘贴 App 内复制的完整 `https://api.day.app/…` 推送链接。不要提交到文件或 Issue，也不必发送到聊天中。
 3. 打开 **Actions → iPhone Duo pickup monitor → Run workflow**，选择 `test-push`，确认手机收到测试通知。该通知不表示有货。
 4. 再手动选择 `run`，确认工作流成功。
 5. 在 **Settings → Secrets and variables → Actions → Variables** 添加 `MONITOR_ENABLED`，值为 `true`。启用后每五分钟调度一次；队列繁忙时可能延迟。
