@@ -1,5 +1,7 @@
 import copy
 import json
+import io
+import urllib.error
 import unittest
 from unittest.mock import patch
 
@@ -125,6 +127,15 @@ class StockTests(unittest.TestCase):
         with patch.object(monitor, "request_json", return_value={"code": 400}):
             with self.assertRaises(monitor.MonitorError) as error:
                 monitor.Bark("private-key").send("title", "body")
+        self.assertNotIn("private-key", str(error.exception))
+
+    def test_bark_http_error_identifies_invalid_device_without_leaking_secret(self):
+        response = io.BytesIO(json.dumps({"code": 400, "message": "failed to get device token: private-key"}).encode())
+        failure = urllib.error.HTTPError("https://api.day.app/push", 400, "Bad Request", {}, response)
+        with patch.object(monitor.urllib.request, "urlopen", side_effect=failure):
+            with self.assertRaises(monitor.MonitorError) as error:
+                monitor.Bark("private-key").send("title", "body")
+        self.assertIn("设备密钥", str(error.exception))
         self.assertNotIn("private-key", str(error.exception))
 
     def test_github_state_cannot_silently_reset_on_access_error(self):

@@ -51,6 +51,17 @@ def request_json(url, *, data=None, headers=None, method=None):
             raise MonitorError(f"{host} 返回的数据过大")
         result = json.loads(raw)
     except urllib.error.HTTPError as exc:
+        if host == "api.day.app":
+            try:
+                message = str(json.loads(exc.read(8192)).get("message", "")).lower()
+            except (ValueError, UnicodeError, AttributeError, OSError):
+                message = ""
+            # Classify the error without printing the server's raw message:
+            # it can echo the secret device key.
+            if "device token" in message or "device key" in message or "device_key" in message:
+                raise MonitorError("Bark 设备密钥无效或未在默认服务器注册；请在 App 中确认默认服务器并更新 BARK_KEY") from None
+            if "apns" in message:
+                raise MonitorError("Bark 无法向 Apple 推送服务投递；请打开 Bark App 刷新设备注册") from None
         raise MonitorError(f"{host} HTTP {exc.code}") from None
     except (urllib.error.URLError, TimeoutError, OSError):
         raise MonitorError(f"{host} 网络连接失败或超时") from None
